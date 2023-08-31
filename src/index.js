@@ -1,6 +1,5 @@
 import App from "./App";
 import { render } from '@wordpress/element';
-import 'bootstrap/dist/css/bootstrap.css'
 
 /**
  * Import the stylesheet for the plugin.

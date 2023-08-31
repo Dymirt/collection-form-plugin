@@ -1,3 +1,11 @@
-
+.row {
+  display: flex;
+}
+.row .col {
+  width: 50%;
+}
+.row .col input[type=text] {
+  width: 300px;
+}
 
 /*# sourceMappingURL=main.css.map */

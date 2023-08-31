@@ -1,0 +1,9 @@
+.row{
+  display: flex;
+  .col{
+    width: 50%;
+    input[type="text"]{
+      width: 300px;
+    }
+  }
+}
