@@ -1,0 +1,17 @@
+{
+    "name": "dmytrokolida/collection-form",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Dmytrokolida\\CollectionForm\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dymirt",
+            "email": "kolidadmytro@gmail.com"
+        }
+    ],
+    "require": {}
+}
