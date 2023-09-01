@@ -3,7 +3,6 @@ const CollectionForm = () => {
 
     const empty_client_obj = {
         name: null,
-        statusVat: null,
         regon: null,
         krs: null,
         workingAddress: null,
@@ -37,17 +36,38 @@ const CollectionForm = () => {
 
     }
 
+    function isValidNip(nip) {
+        if(typeof nip !== 'string')
+            return false;
+
+        nip = nip.replace(/[\ \-]/gi, '');
+
+        let weight = [6, 5, 7, 2, 3, 4, 5, 6, 7];
+        let sum = 0;
+        let controlNumber = parseInt(nip.substring(9, 10));
+        let weightCount = weight.length;
+        for (let i = 0; i < weightCount; i++) {
+            sum += (parseInt(nip.substr(i, 1)) * weight[i]);
+        }
+
+        return sum % 11 === controlNumber;
+    }
+
 
     function checkNip(nip) {
-        const nip_length = nip.length
+        if (isValidNip(nip)){
+            return [true, ""];
+        } else {
+            const nip_length = nip.length;
 
-        switch (nip_length) {
-            case (0):
-                return [false, "Pole 'NIP' nie może być puste."];
-            case (10):
-                return [true, ""];
-            default:
-                return [false, "Pole 'NIP' ma nieprawidłową długość. Wymagane 10 znaków."];
+            switch (nip_length) {
+                case (0):
+                    return [false, "Pole 'NIP' nie może być puste."];
+                case (10):
+                    return [false, "Nieprawidłowy 'NIP'"];
+                default:
+                    return [false, "Pole 'NIP' ma nieprawidłową długość. Wymagane 10 znaków."];
+            }
         }
     }
     async function getClientNipDetail(nip) {
@@ -56,19 +76,25 @@ const CollectionForm = () => {
 
         if (is_valid_nip) {
             const [subject, message] = await getNipDetail(nip).then(response => checkResponse(response));
-            setClientData(subject);
+            setClientData(subject !== null ? subject : empty_client_obj);
+            setClientMessage(subject !== null ? message : `Nie znaleziono nip: ${nip}`);
         } else {
             setClientData(empty_client_obj);
+            setClientMessage(nip_message);
         }
-
-        setClientMessage(nip_message);
-
     }
 
     async function getDebtorNipDetail(nip) {
-        const [subject, message] = await getNipDetail(nip).then(response => checkResponse(response));
-        setDebtorData(subject);
-        setDebtorMessage(message);
+        const [is_valid_nip, nip_message] = checkNip(nip);
+
+        if (is_valid_nip) {
+            const [subject, message] = await getNipDetail(nip).then(response => checkResponse(response));
+            setDebtorData(subject !== null ? subject : empty_client_obj);
+            setDebtorMessage(subject !== null ? message : `Nie znaleziono nip: ${nip}`);
+        } else {
+            setDebtorData(empty_client_obj);
+            setDebtorMessage(nip_message);
+        }
     }
 
     React.useEffect(() => {
@@ -81,11 +107,11 @@ const CollectionForm = () => {
 
     function detailView(obj) {
         return (<>
-            <p>{obj.name}</p>
-            <p>REGON: {obj.regon}</p>
-            <p>KRS: {obj.krs}</p>
-            <p>Adres: {obj.workingAddress}</p>
-            <p>Data rozpoczęcia działalności {obj.registrationLegalDate}</p>
+            <p>Nazwa: <br/>{obj.name}</p>
+            <p>REGON: <br/>{obj.regon}</p>
+            <p>KRS: <br/>{obj.krs}</p>
+            <p>Adres: <br/>{obj.workingAddress}</p>
+            <p>Data rozpoczęcia działalności: <br/>{obj.registrationLegalDate}</p>
         </>);
     }
 
@@ -98,13 +124,11 @@ const CollectionForm = () => {
                     value={client_nip}
                     onChange={(e) => setClientNip(e.target.value)}
                 />
+                <div className='error-message'>
+                    {client_message !== '' && client_message}
+                </div>
                 <div>
-                    {client_message !== ''
-                        ? client_message
-                        : client_data !== null
-                            ? detailView(client_data)
-                            : `Nie znaleziono nip: ${client_nip}`
-                    }
+                    {client_data.name !== null && detailView(client_data)}
                 </div>
             </div>
             <div className='col'>
@@ -114,14 +138,10 @@ const CollectionForm = () => {
                     value={debtor_nip}
                     onChange={(e) => setDebtorNip(e.target.value)}
                 />
-                <div>
-                    {debtor_message !== ''
-                        ? debtor_message
-                        : debtor_data !== null
-                            ? detailView(debtor_data)
-                            : `Nie znaleziono nip: ${debtor_nip}`
-                    }
+                <div className='error-message'>
+                    {debtor_message !== '' && debtor_message}
                 </div>
+                <div>{debtor_data.name !== null && detailView(debtor_data)}</div>
             </div>
         </div>
     );

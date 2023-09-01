@@ -1,9 +1,22 @@
 .row{
-  display: flex;
+  @media screen and (min-width: 756px) {
+    display: flex;
+  }
+
   .col{
-    width: 50%;
+    @media screen and (min-width: 756px) {
+      width: 50%;
+    }
+
+    margin-bottom: 2rem;
     input[type="text"]{
       width: 300px;
+      margin-bottom: 1rem;
+
+    }
+    .error-message {
+      color: red;
+      font-size: 10px;
     }
   }
 }

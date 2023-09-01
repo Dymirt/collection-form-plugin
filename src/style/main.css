@@ -1,11 +1,23 @@
-.row {
-  display: flex;
+@media screen and (min-width: 756px) {
+  .row {
+    display: flex;
+  }
 }
 .row .col {
-  width: 50%;
+  margin-bottom: 2rem;
+}
+@media screen and (min-width: 756px) {
+  .row .col {
+    width: 50%;
+  }
 }
 .row .col input[type=text] {
   width: 300px;
+  margin-bottom: 1rem;
+}
+.row .col .error-message {
+  color: red;
+  font-size: 10px;
 }
 
 /*# sourceMappingURL=main.css.map */
