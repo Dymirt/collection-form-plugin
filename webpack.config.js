@@ -6,4 +6,9 @@ module.exports = {
         react: 'React',
         'react-dom': 'ReactDOM',
     },
+    resolve: {
+        fallback: {
+            "https": require.resolve("https-browserify"),
+        },
+    },
 };

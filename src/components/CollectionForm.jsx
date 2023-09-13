@@ -1,5 +1,16 @@
 import React from 'react'
+
 const CollectionForm = () => {
+    const Client = require('node-regon');
+
+    let gus = Client.createClient({
+        key: "ae27223ef7cf4439b68c",
+        birVersion: '1.1', // by default 1
+        captcha: {
+            autofill: false,
+            apiKey: "ANTIGATE_API"
+        }
+    });
 
     const empty_client_obj = {
         name: null,
